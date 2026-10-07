@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Giỏ hàng - Demo App</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .top h1 {
+      margin: 0;
+    }
+
+    .back {
+      color: #d99000;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+
+    .box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      margin-bottom: 20px;
+    }
+
+    .box h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    /* SẢN PHẨM */
+
+    .cart-item {
+      display: flex;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+      align-items: center;
+    }
+
+    .cart-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #eee;
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-info h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .price {
+      color: #d99000;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .quantity button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .quantity button:hover {
+      background: #f3f3f3;
+    }
+
+    .remove {
+      border: none;
+      background: #ffe5e5;
+      color: #d00000;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* FORM */
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    /* THANH TOÁN */
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .payment-option:hover {
+      background: #fffaf0;
+    }
+
+    .payment-option input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .payment-icon {
+      font-size: 22px;
+    }
+
+    /* TỔNG TIỀN */
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .total-row {
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .total {
+      color: #d99000;
+    }
+
+    .buy-btn {
+      width: 100%;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      background: #ffb400;
+      color: #222;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .buy-btn:hover {
+      background: #e6a000;
+    }
+
+    /* TRỐNG */
+
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: #777;
+    }
+
+    /* THÀNH CÔNG */
+
+    .success {
+      display: none;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .success-icon {
+      font-size: 60px;
+    }
+
+    .success h2 {
+      color: #1a8f3c;
+    }
+
+    .home-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 20px;
+      background: #ffb400;
+      color: #222;
+      text-decoration: none;
+      border-radius: 7px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 800px) {
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .cart-item {
+        align-items: flex-start;
+      }
+
+      .cart-item img {
+        width: 80px;
+        height: 80px;
+      }
+
+      .remove {
+        font-size: 12px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+
+  <div class="top">
+
+    <h1>🛒 Giỏ hàng</h1>
+
+    <a
+      href="/products.html"
+      class="back"
+    >
+      ← Tiếp tục mua hàng
+    </a>
+
+  </div>
+
+
+  <!-- NỘI DUNG -->
+
+  <div id="checkoutArea">
+
+    <div class="layout">
+
+      <!-- CỘT TRÁI -->
+
+      <div>
+
+        <!-- DANH SÁCH SẢN PHẨM -->
+
+        <div class="box">
+
+          <h2>🛍️ Sản phẩm trong giỏ</h2>
+
+          <div id="cartList"></div>
+
+          <div
+            id="emptyCart"
+            class="empty"
+            style="display:none;"
+          >
+
+            <div style="font-size:50px;">
+              🛒
+            </div>
+
+            <h3>
+              Giỏ hàng đang trống
+            </h3>
+
+            <p>
+              Bạn chưa có sản phẩm nào.
+            </p>
+
+            <a
+              href="/products.html"
+              class="back"
+            >
+              Xem sản phẩm
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <!-- THÔNG TIN NHẬN HÀNG -->
+
+        <div class="box">
+
+          <h2>📦 Thông tin nhận hàng</h2>
+
+          <div class="form-group">
+
+            <label>
+              Họ và tên
+            </label>
+
+            <input
+              id="customerName"
+              type="text"
+              placeholder="Nhập họ và tên"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Số điện thoại
+            </label>
+
+            <input
+              id="customerPhone"
+              type="tel"
+              placeholder="Nhập số điện thoại"
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Địa chỉ nhận hàng
+            </label>
+
+            <textarea
+              id="customerAddress"
+              placeholder="Nhập địa chỉ nhận hàng"
+            ></textarea>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Ghi chú
+            </label>
+
+            <textarea
+              id="customerNote"
+              placeholder="Ghi chú cho người bán (không bắt buộc)"
+            ></textarea>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CỘT PHẢI -->
+
+      <div>
+
+        <!-- PHƯƠNG THỨC THANH TOÁN -->
+
+        <div class="box">
+
+          <h2>💳 Phương thức thanh toán</h2>
+
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="payment"
+              value="COD"
+              checked
+            >
+
+            <span class="payment-icon">
+              💵
+            </span>
+
+            <span>
+              <strong>
+                Thanh toán khi nhận hàng
+              </strong>
+              <br>
+              <small>
+                Thanh toán tiền mặt khi nhận hàng
+              </small>
+            </span>
+
+          </label>
+
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="payment"
+              value="BANK"
+            >
+
+            <span class="payment-icon">
+              🏦
+            </span>
+
+            <span>
+              <strong>
+                Chuyển khoản ngân hàng
+              </strong>
+              <br>
+              <small>
+                Chuyển khoản sau khi đặt hàng
+              </small>
+            </span>
+
+          </label>
+
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="payment"
+              value="EWALLET"
+            >
+
+            <span class="payment-icon">
+              📱
+            </span>
+
+            <span>
+              <strong>
+                Ví điện tử
+              </strong>
+              <br>
+              <small>
+                Thanh toán qua ví điện tử
+              </small>
+            </span>
+
+          </label>
+
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="payment"
+              value="CARD"
+            >
+
+            <span class="payment-icon">
+              💳
+            </span>
+
+            <span>
+              <strong>
+                Thẻ ngân hàng
+              </strong>
+              <br>
+              <small>
+                Visa / Mastercard
+              </small>
+            </span>
+
+          </label>
+
+        </div>
+
+
+        <!-- TỔNG ĐƠN -->
+
+        <div class="box">
+
+          <h2>🧾 Tổng đơn hàng</h2>
+
+
+          <div class="summary-row">
+
+            <span>
+              Số lượng:
+            </span>
+
+            <strong id="totalQuantity">
+              0
+            </strong>
+
+          </div>
+
+
+          <div class="summary-row">
+
+            <span>
+              Tạm tính:
+            </span>
+
+            <strong id="subtotal">
+              0 ₫
+            </strong>
+
+          </div>
+
+
+          <div class="summary-row">
+
+            <span>
+              Phí vận chuyển:
+            </span>
+
+            <strong id="shipping">
+              30.000 ₫
+            </strong>
+
+          </div>
+
+
+          <div class="summary-row total-row">
+
+            <span>
+              Tổng thanh toán:
+            </span>
+
+            <span
+              id="totalPrice"
+              class="total"
+            >
+              0 ₫
+            </span>
+
+          </div>
+
+
+          <button
+            id="buyBtn"
+            class="buy-btn"
+          >
+            🛍️ Đặt hàng
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ĐẶT HÀNG THÀNH CÔNG -->
+
+  <div
+    id="success"
+    class="box success"
+  >
+
+    <div class="success-icon">
+      ✅
+    </div>
+
+    <h2>
+      Đặt hàng thành công!
+    </h2>
+
+    <p>
+      Cảm ơn bạn đã mua hàng.
+    </p>
+
+    <p>
+      Đơn hàng của bạn đã được ghi nhận.
+    </p>
+
+    <a
+      href="/products.html"
+      class="home-btn"
+    >
+      Tiếp tục mua hàng
+    </a>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  // ==========================
+  // GIỎ HÀNG
+  // ==========================
+
+  function getCart() {
+
+    try {
+
+      return JSON.parse(
+        localStorage.getItem('cart') || '[]'
+      );
+
+    } catch {
+
+      return [];
+
+    }
+
+  }
+
+
+  function saveCart(cart) {
+
+    localStorage.setItem(
+      'cart',
+      JSON.stringify(cart)
+    );
+
+  }
+
+
+  // ==========================
+  // FORMAT TIỀN
+  // ==========================
+
+  function formatMoney(number) {
+
+    return Number(number)
+      .toLocaleString('vi-VN') + ' ₫';
+
+  }
+
+
+  // ==========================
+  // HIỂN THỊ GIỎ HÀNG
+  // ==========================
+
+  function renderCart() {
+
+    const cart = getCart();
+
+    const cartList =
+      document.getElementById('cartList');
+
+    const emptyCart =
+      document.getElementById('emptyCart');
+
+    const checkoutArea =
+      document.getElementById('checkoutArea');
+
+
+    if (cart.length === 0) {
+
+      cartList.innerHTML = '';
+
+      emptyCart.style.display = 'block';
+
+      checkoutArea.querySelector('.layout')
+        .style.display = 'none';
+
+      return;
+
+    }
+
+
+    emptyCart.style.display = 'none';
+
+    checkoutArea.querySelector('.layout')
+      .style.display = 'grid';
+
+
+    let totalQuantity = 0;
+
+    let subtotal = 0;
+
+
+    cartList.innerHTML =
+      cart.map((item, index) => {
+
+        const quantity =
+          Number(item.quantity || 1);
+
+        const price =
+          Number(item.price || 0);
+
+        totalQuantity += quantity;
+
+        subtotal += price * quantity;
+
+
+        return `
+
+          <div class="cart-item">
+
+            <img
+              src="${item.imageUrl || 'https://via.placeholder.com/100'}"
+              alt="${item.name || 'Sản phẩm'}"
+            >
+
+
+            <div class="item-info">
+
+              <h3>
+                ${item.name || 'Sản phẩm'}
+              </h3>
+
+              <div class="price">
+                ${formatMoney(price)}
+              </div>
+
+
+              <div class="quantity">
+
+                <button
+                  onclick="changeQuantity(${index}, -1)"
+                >
+                  −
+                </button>
+
+                <strong>
+                  ${quantity}
+                </strong>
+
+                <button
+                  onclick="changeQuantity(${index}, 1)"
+                >
+                  +
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <button
+              class="remove"
+              onclick="removeItem(${index})"
+            >
+              🗑️ Xóa
+            </button>
+
+          </div>
+
+        `;
+
+      }).join('');
+
+
+    // Phí ship
+
+    const shipping =
+      subtotal > 0 ? 30000 : 0;
+
+
+    const total =
+      subtotal + shipping;
+
+
+    document.getElementById(
+      'totalQuantity'
+    ).textContent = totalQuantity;
+
+
+    document.getElementById(
+      'subtotal'
+    ).textContent = formatMoney(subtotal);
+
+
+    document.getElementById(
+      'shipping'
+    ).textContent = formatMoney(shipping);
+
+
+    document.getElementById(
+      'totalPrice'
+    ).textContent = formatMoney(total);
+
+  }
+
+
+  // ==========================
+  // TĂNG / GIẢM SỐ LƯỢNG
+  // ==========================
+
+  function changeQuantity(index, change) {
+
+    const cart = getCart();
+
+    if (!cart[index]) return;
+
+
+    cart[index].quantity =
+      Number(cart[index].quantity || 1)
+      + change;
+
+
+    if (cart[index].quantity <= 0) {
+
+      cart.splice(index, 1);
+
+    }
+
+
+    saveCart(cart);
+
+    renderCart();
+
+  }
+
+
+  // ==========================
+  // XÓA SẢN PHẨM
+  // ==========================
+
+  function removeItem(index) {
+
+    const cart = getCart();
+
+    if (!cart[index]) return;
+
+
+    const name =
+      cart[index].name || 'sản phẩm';
+
+
+    if (
+      !confirm(
+        `Bạn có muốn xóa "${name}" khỏi giỏ hàng không?`
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    cart.splice(index, 1);
+
+    saveCart(cart);
+
+    renderCart();
+
+  }
+
+
+  // ==========================
+  // ĐẶT HÀNG
+  // ==========================
+
+  document
+    .getElementById('buyBtn')
+    .addEventListener(
+      'click',
+      function () {
+
+        const cart = getCart();
+
+
+        // Kiểm tra giỏ
+
+        if (cart.length === 0) {
+
+          alert(
+            'Giỏ hàng đang trống!'
+          );
+
+          return;
+
+        }
+
+
+        // Kiểm tra đăng nhập
+
+        const token =
+          localStorage.getItem(
+            'access_token'
+          );
+
+
+        if (!token) {
+
+          alert(
+            'Bạn cần đăng nhập để đặt hàng.'
+          );
+
+          window.location.href =
+            '/login.html';
+
+          return;
+
+        }
+
+
+        // Lấy thông tin
+
+        const name =
+          document
+            .getElementById('customerName')
+            .value.trim();
+
+
+        const phone =
+          document
+            .getElementById('customerPhone')
+            .value.trim();
+
+
+        const address =
+          document
+            .getElementById('customerAddress')
+            .value.trim();
+
+
+        const note =
+          document
+            .getElementById('customerNote')
+            .value.trim();
+
+
+        const payment =
+          document.querySelector(
+            'input[name="payment"]:checked'
+          ).value;
+
+
+        // Kiểm tra thông tin
+
+        if (!name) {
+
+          alert(
+            'Vui lòng nhập họ và tên.'
+          );
+
+          return;
+
+        }
+
+
+        if (!phone) {
+
+          alert(
+            'Vui lòng nhập số điện thoại.'
+          );
+
+          return;
+
+        }
+
+
+        if (!address) {
+
+          alert(
+            'Vui lòng nhập địa chỉ nhận hàng.'
+          );
+
+          return;
+
+        }
+
+
+        // Tổng tiền
+
+        const subtotal =
+          cart.reduce(
+            (sum, item) =>
+              sum +
+              Number(item.price || 0)
+              *
+              Number(item.quantity || 1),
+            0
+          );
+
+
+        const shipping =
+          subtotal > 0
+            ? 30000
+            : 0;
+
+
+        const total =
+          subtotal + shipping;
+
+
+        // Tên phương thức
+
+        const paymentNames = {
+
+          COD:
+            'Thanh toán khi nhận hàng',
+
+          BANK:
+            'Chuyển khoản ngân hàng',
+
+          EWALLET:
+            'Ví điện tử',
+
+          CARD:
+            'Thẻ ngân hàng'
+
+        };
+
+
+        const paymentName =
+          paymentNames[payment];
+
+
+        // Xác nhận
+
+        const message = `
+
+XÁC NHẬN ĐẶT HÀNG
+
+Khách hàng: ${name}
+
+Số điện thoại: ${phone}
+
+Địa chỉ: ${address}
+
+Phương thức:
+${paymentName}
+
+Tổng tiền:
+${formatMoney(total)}
+
+Bạn có muốn đặt hàng không?
+
+        `;
+        // ======================
+        // LƯU ĐƠN HÀNG
+        // ======================
+
+        const orders =
+          JSON.parse(
+            localStorage.getItem(
+              'orders'
+            ) || '[]'
+          );
+
+
+        const order = {
+
+          id:
+            'DH' +
+            Date.now(),
+
+          customerName:
+            name,
+
+          phone:
+            phone,
+
+          address:
+            address,
+
+          note:
+            note,
+
+          payment:
+            paymentName,
+
+          items:
+            cart,
+
+          subtotal:
+            subtotal,
+
+          shipping:
+            shipping,
+
+          total:
+            total,
+
+          status:
+            'Đã đặt hàng',
+
+          createdAt:
+            new Date().toISOString()
+
+        };
+
+
+        orders.push(order);
+
+
+        localStorage.setItem(
+          'orders',
+          JSON.stringify(orders)
+        );
+
+
+        // Xóa giỏ
+
+        localStorage.removeItem(
+          'cart'
+        );
+
+
+        // Ẩn checkout
+
+        document.getElementById(
+          'checkoutArea'
+        ).style.display = 'none';
+
+
+        // Hiện thành công
+
+        document.getElementById(
+          'success'
+        ).style.display = 'block';
+
+
+        console.log(
+          'Đơn hàng:',
+          order
+        );
+
+      }
+    );
+
+
+  // ==========================
+  // CHẠY
+  // ==========================
+
+  renderCart();
+
+</script>
+
+</body>
+</html>

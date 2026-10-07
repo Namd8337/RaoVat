@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RaoVat - Mua bán nhanh, đăng tin dễ</title>
+  <link rel="stylesheet" href="products.html.css">
+  <link rel="stylesheet" href="products.css">
+</head>
+<script src="/common.js"></script>
+<body>
+
+<header class="site-header">
+  <div class="container header-container">
+    <a href="/products.html" class="logo">RAO<b>VAT</b></a>
+    <div class="search-box">
+      <input id="q" type="search" placeholder="Tìm kiếm sản phẩm, dịch vụ...">
+      <button type="button" id="btnSearch">Tìm kiếm</button>
+    </div>
+    <div class="header-actions">
+
+  <a href="/login.html" class="btn-login" id="btnLogin">
+    Đăng nhập
+  </a>
+
+  <a href="/register.html" class="btn-register" id="btnRegister">
+    Đăng ký
+  </a>
+
+<label>Tỉnh / Thành phố 
+  <select id="fProvince"> 
+    <option value="">-- Chọn tỉnh / thành phố --</option> 
+  </select> 
+</label> 
+ 
+<label>Phường / Xã 
+  <select id="fWard" disabled> 
+    <option value="">-- Chọn phường / xã --</option> 
+  </select> 
+</label>
+ <a href="/cart.html" class="btn-cart" id="btnCart">
+  🛒 Giỏ hàng
+  <span id="cartCount" class="cart-count">0</span>
+</a>
+
+  <div class="user-menu" id="userMenu" style="display: none;">
+    <button class="user-button" id="btnUser">
+      <img
+        id="headerAvatar"
+        src="https://via.placeholder.com/40"
+        alt="Avatar"
+      >
+      <span id="headerUsername">Tài khoản</span>
+      <span>▾</span>
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <a href="/profile.html">👤 Trang cá nhân</a>
+      <a href="#" id="btnLogout">🚪 Đăng xuất</a>
+    </div>
+  </div>
+
+  <a href="#" class="btn-post" id="btnPost">
+    + Đăng tin
+  </a>
+
+      </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-main">
+      <h1>Mua bán đồ cũ, tìm việc, thuê nhà ngay gần bạn</h1>
+      <p>Hàng ngàn tin đăng mới mỗi ngày từ người bán uy tín.</p>
+      <a href="#list">Xem tin mới nhất</a>
+    </div>
+    <div class="hero-side">
+      <div class="hero-tile">An toàn mua bán<small>Kiểm tra hàng trước khi thanh toán</small></div>
+      <div class="hero-tile">Đăng tin miễn phí<small>Chỉ mất 1 phút để đăng</small></div>
+    </div>
+  </section>
+
+  <section class="wx1qvly cat-wrap">
+    <div class="cat-grid" id="categories"></div>
+  </section>
+
+  <section class="wimnf93">
+    <div class="h1xml23r">
+      <div class="tugy9lx">
+        <h2 class="tdys5e0">Tin nổi bật</h2>
+        <span class="bgx255o" id="hotCount">0</span>
+      </div>
+    </div>
+    <div class="l1ssiand">
+      <button class="n1gwkfoj" data-side="left" aria-label="Trước" id="hotPrev"><span class="n1om8f3w">‹</span></button>
+      <div class="c1e57g0x" id="hotList"></div>
+      <button class="n1gwkfoj" data-side="right" aria-label="Sau" id="hotNext"><span class="n1om8f3w">›</span></button>
+    </div>
+  </section>
+
+  <section class="wimnf93" id="list">
+    <div class="sec-head">
+      <div class="h1xml23r"><h2 class="tdys5e0">Tin đăng dành cho bạn</h2></div>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="toolbar">
+      <button class="chip active" data-range="all">Tất cả</button>
+      <button class="chip" data-range="0-5000000">Dưới 5 triệu</button>
+      <button class="chip" data-range="5000000-20000000">5 - 20 triệu</button>
+      <button class="chip" data-range="20000000-1e15">Trên 20 triệu</button>
+
+      <select id="sort" aria-label="Sắp xếp">
+        <option value="new">Mới nhất</option>
+        <option value="asc">Giá thấp đến cao</option>
+        <option value="desc">Giá cao đến thấp</option>
+      </select>
+
+      <select id="locationSort" aria-label="Vị trí">
+        <option value="all">📍 Tất cả khu vực</option>
+        <option value="near">📍 Gần tôi nhất</option>
+      </select>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+    <button class="more" id="more" hidden>Xem thêm</button>
+  </section>
+
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-container">
+      <div class="footer-col"><h4>Về chúng tôi</h4><a href="#">Giới thiệu</a><a href="#">Quy chế hoạt động</a><a href="#">Chính sách bảo mật</a></div>
+      <div class="footer-col"><h4>Hỗ trợ khách hàng</h4><a href="#">Trung tâm trợ giúp</a><a href="#">An toàn mua bán</a><a href="#">Liên hệ hỗ trợ</a></div>
+      <div class="footer-col"><h4>Tải ứng dụng</h4><a href="#">App Store</a><a href="#">Google Play</a></div>
+    </div>
+    <p class="copy">© RaoVat. Demo NestJS.</p>
+  </div>
+</footer>
+<script>
+const API_URL='/products';
+const API_KEY='';
+const PAGE=12;
+
+const headers=(json=false)=>{
+  const token=localStorage.getItem('access_token');
+  return {
+    ...(json?{'Content-Type':'application/json'}:{}),
+    ...(API_KEY?{'x-api-key':API_KEY}:{}),
+    ...(token?{'Authorization':'Bearer '+token}:{})
+  };
+};
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>(n==null||isNaN(Number(n)))?'Liên hệ':Number(n).toLocaleString('vi-VN')+' đ';
+function getUser(){
+  try{return JSON.parse(localStorage.getItem('user')||'null')}
+  catch{return null}
+}
+
+function loggedIn(){
+  return !!(localStorage.getItem('access_token')&&getUser());
+}
+
+/* ===== HEADER ===== */
+
+function updateHeader(){
+
+  const login = $('btnLogin');
+  const register = $('btnRegister');
+  const menu = $('userMenu');
+
+  const user = getUser();
+  const on = loggedIn();
+
+  // Chưa đăng nhập
+  if (!on) {
+
+    if (login) login.style.display = 'inline-flex';
+    if (register) register.style.display = 'inline-flex';
+    if (menu) menu.style.display = 'none';
+
+    return;
+  }
+
+  // Đã đăng nhập
+  if (login) login.style.display = 'none';
+  if (register) register.style.display = 'none';
+  if (menu) menu.style.display = 'block';
+
+  const name =
+    user?.full_name ||
+    user?.fullName ||
+    user?.username ||
+    user?.email ||
+    'Tài khoản';
+
+  const avatar =
+    user?.avatar ||
+    user?.avatarUrl ||
+    'https://ui-avatars.com/api/?name=' +
+    encodeURIComponent(name) +
+    '&background=ffba00&color=222';
+
+  if ($('headerAvatar')) {
+    $('headerAvatar').src = avatar;
+  }
+
+  if ($('headerUsername')) {
+    $('headerUsername').textContent = name;
+  }
+}
+/* ===== AVATAR MENU ===== */
+
+$('btnUser')?.addEventListener('click',e=>{
+  e.stopPropagation();
+  $('userDropdown')?.classList.toggle('show');
+});
+
+document.addEventListener('click',()=>{
+  $('userDropdown')?.classList.remove('show');
+});
+
+/* ===== LOGOUT ===== */
+
+$('btnLogout')?.addEventListener('click',e=>{
+  e.preventDefault();
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('user');
+  location.href='/products.html';
+});
+
+/* ===== ĐĂNG TIN ===== */
+
+$('btnPost')?.addEventListener('click',e=>{
+  e.preventDefault();
+
+  if(!loggedIn()){
+    alert('Bạn cần đăng nhập để đăng tin!');
+    location.href='/login.html';
+    return;
+  }
+
+  openForm();
+});
+
+/* ===== CATEGORY ===== */
+
+const CATEGORIES=[
+  ['🚗','Xe cộ',['xe','honda','yamaha','vespa','ô tô','oto','moto']],
+  ['🏠','Bất động sản',['nhà','căn hộ','chung cư','đất','phòng trọ','thuê']],
+  ['📱','Đồ điện tử',['iphone','samsung','laptop','macbook','dell','tivi','tai nghe','điện thoại','máy tính','ipad']],
+  ['🛋️','Đồ gia dụng',['tủ','bàn','ghế','giường','nồi','quạt','máy giặt','tủ lạnh','sofa']],
+  ['👔','Thời trang',['áo','quần','giày','túi','đồng hồ','váy']],
+  ['💼','Việc làm',['tuyển','việc làm','lương','nhân viên']]
+];
+
+let all=[],view=[],shown=PAGE,cat=-1,range='all',cur=null;
+
+function art(p){
+  const hue=(p.id*47)%360;
+  const ch=(String(p.title||'?').trim()[0]||'?').toUpperCase();
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">
+    <rect width="100%" height="100%" fill="hsl(${hue},70%,92%)"/>
+    <circle cx="200" cy="150" r="64" fill="hsl(${hue},65%,60%)"/>
+    <text x="200" y="150" fill="#fff" font-size="64" font-weight="700"
+    font-family="Arial" text-anchor="middle" dy=".35em">${esc(ch)}</text></svg>`
+  );
+}
+
+const norm=p=>{
+  const o={
+    id:p.id,
+    name:p.name??'Không có tên',
+    title:p.name??'Không có tên',
+    price:p.price,
+    desc:p.description??''
+  };
+  o.fallback=art(o);
+  o.image=p.imageUrl||p.image_url||p.images?.[0]?.url||p.images?.[0]?.imageUrl||o.fallback;
+  return o;
+};
+
+function renderCats(){
+  $('categories').innerHTML=CATEGORIES.map(([e,n],i)=>
+    `<div class="icvv3li ${cat===i?'active':''}" data-cat="${i}">
+      <div class="i1e01q1y"><div class="cat-emoji">${e}</div></div>
+      <span class="l1sb21pp">${n}</span>
+    </div>`
+  ).join('');
+}
+
+function filtered(){
+  const k=$('q').value.trim().toLowerCase();
+
+  let l=all.filter(p=>{
+    const t=(p.title+' '+p.desc).toLowerCase();
+    return (!k||t.includes(k))&&
+      (cat<0||CATEGORIES[cat][2].some(w=>t.includes(w)));
+  });
+
+  if(range!=='all'){
+    const [a,b]=range.split('-').map(Number);
+    l=l.filter(p=>p.price>=a&&p.price<b);
+  }
+
+  const s=$('sort').value;
+  if(s==='asc')l.sort((a,b)=>a.price-b.price);
+  else if(s==='desc')l.sort((a,b)=>b.price-a.price);
+  else l.sort((a,b)=>b.id-a.id);
+
+  return l;
+}
+
+const cardHTML=p=>`
+<article class="product-card" data-id="${p.id}">
+
+  <div class="card-img">
+    <img
+      src="${esc(p.image)}"
+      alt="${esc(p.title)}"
+      loading="lazy"
+      onerror="this.onerror=null;this.src='${p.fallback}';"
+    >
+  </div>
+
+  <div class="card-info">
+
+    <h3 class="card-title">
+      ${esc(p.title)}
+    </h3>
+
+    <p class="card-price">
+      ${money(p.price)}
+    </p>
+
+    <p class="ckec06z">
+      ${esc(p.desc || 'Chưa có mô tả')}
+    </p>
+
+    <div class="card-footer">
+      <span>Mã tin #${p.id}</span>
+      <span>Xem chi tiết →</span>
+    </div>
+
+    <div class="cart-actions">
+
+      <button
+        type="button"
+        class="btn-add-cart"
+        data-id="${p.id}"
+      >
+        🛒 Thêm giỏ
+      </button>
+
+      <button
+        type="button"
+        class="btn-buy-now"
+        data-id="${p.id}"
+      >
+        🛍️ Mua ngay
+      </button>
+
+    </div>
+
+  </div>
+</article>`;
+
+function renderHot(l){
+  const hot=l.slice(0,8);
+  $('hotCount').textContent=hot.length;
+
+  $('hotList').innerHTML=hot.map(p=>`
+    <div class="c1o4dn7k" data-id="${p.id}"
+    style="--card-flex-basis:290px;--card-flex-grow:0;--card-flex-shrink:0">
+      <div class="c1yye18m">
+        <img class="chd38ob" src="${esc(p.image)}"
+        onerror="this.onerror=null;this.src='${p.fallback}';">
+      </div>
+      <div class="c1glxwac">
+        <div class="c1wlsjnq">
+          <h3 class="c1ocnp9w">${esc(p.title)}</h3>
+          <p class="ckec06z">${esc(p.desc)||'Chưa có mô tả'}</p>
+        </div>
+        <div class="c15ytwkq">
+          <span class="c10eciza">${money(p.price)}</span>
+        </div>
+      </div>
+    </div>
+  `).join('')||'<div class="state">Chưa có tin nổi bật.</div>';
+}
+
+function render(){
+  view=filtered();
+  renderHot(view);
+
+  $('count').textContent=view.length+' tin đăng';
+
+  $('productGrid').innerHTML=view.length
+    ?view.slice(0,shown).map(cardHTML).join('')
+    :'<div class="state">Không tìm thấy tin phù hợp.</div>';
+
+  $('more').hidden=shown>=view.length;
+}
+
+const reset=()=>{
+  shown=PAGE;
+  render();
+};
+
+/* ===== MODAL ===== */
+
+function closeModal(){
+  $('modal').classList.remove('open');
+}
+
+function showModal(html){
+  $('modalBox').innerHTML=
+    '<button class="close" id="closeBtn">✕</button>'+html;
+
+  $('modal').classList.add('open');
+}
+
+function openDetail(id){
+  const p=all.find(x=>x.id===Number(id));
+  if(!p)return;
+
+  cur=p;
+
+  showModal(`
+    <img src="${esc(p.image)}"
+    onerror="this.onerror=null;this.src='${p.fallback}';">
+
+    <div class="modal-body">
+      <h3>${esc(p.title)}</h3>
+      <p class="card-price">${money(p.price)}</p>
+      <p class="desc">${esc(p.desc)||'Người bán chưa thêm mô tả.'}</p>
+
+      <div class="card-footer">
+        <span>Mã tin #${p.id}</span>
+      </div>
+      <button class="btn-contact">Liên hệ người bán</button>
+      <button class="btn-danger" id="btnDelete">Xóa tin này</button>
+      <div class="product-actions">
+    <button onclick="addToCart(...)">
+        🛒 Thêm vào giỏ
+    </button>
+
+    <button onclick="buyNow(...)">
+        🛍️ Mua ngay
+    </button>
+</div>
+    </div>
+  `);
+}
+document.addEventListener('click', e => {
+
+  if (e.target.id === 'closeBtn') {
+    closeModal();
+    return;
+  }
+
+  if (e.target.id === 'btnDelete') {
+    deleteCurrent();
+    return;
+  }
+
+});
+/* ===== ĐĂNG TIN ===== */
+
+const PROV_API='https://provinces.open-api.vn/api/v2/p/';
+
+async function loadProvinces(){
+  const sel=$('fProvince');
+
+  try{
+    const res=await fetch(PROV_API);
+    const list=await res.json();
+
+    sel.innerHTML='<option value="">-- Chọn tỉnh / thành phố --</option>'+
+      list.map(p=>`<option value="${p.code}">${esc(p.name)}</option>`).join('');
+  }catch{
+    sel.innerHTML='<option>Không tải được danh sách tỉnh</option>';
+  }
+}
+
+async function loadWards(code){
+  const ward=$('fWard');
+
+  ward.innerHTML='<option value="">-- Chọn phường / xã --</option>';
+  ward.disabled=true;
+
+  if(!code)return;
+
+  try{
+    const res=await fetch(PROV_API+code+'?depth=2');
+    const data=await res.json();
+    const wards=data.wards||(data.districts||[]).flatMap(d=>d.wards||[]);
+
+    ward.innerHTML='<option value="">-- Chọn phường / xã --</option>'+
+      wards.map(w=>`<option value="${esc(w.name)}">${esc(w.name)}</option>`).join('');
+
+    ward.disabled=false;
+  }catch{}
+}
+
+function openForm(){
+  showModal(`
+    <div class="modal-body form-only">
+
+      <h3>Đăng tin mới</h3>
+
+      <label>Tên sản phẩm
+        <input id="fName" maxlength="255"
+        placeholder="VD: iPhone 13 Pro Max">
+      </label>
+
+      <label>Giá (đ)
+        <input id="fPrice" type="number" min="0"
+        placeholder="VD: 14500000">
+      </label>
+
+      <label>Danh mục
+        <select id="fCategory">
+          <option value="">-- Chọn danh mục --</option>
+          <option value="1">Điện thoại</option>
+          <option value="2">Laptop & Máy tính</option>
+          <option value="3">Điện tử</option>
+          <option value="4">Thời trang</option>
+          <option value="5">Xe cộ</option>
+          <option value="6">Đồ gia dụng</option>
+          <option value="7">Đồ học tập</option>
+          <option value="8">Thể thao</option>
+          <option value="9">Thú cưng</option>
+          <option value="10">Khác</option>
+        </select>
+      </label>
+
+      <label>Ảnh sản phẩm
+        <input id="fImage" type="file" accept="image/*">
+      </label>
+
+      <label>Tỉnh / Thành phố
+        <select id="fProvince">
+          <option value="">-- Chọn tỉnh / thành phố --</option>
+        </select>
+      </label>
+
+      <label>Phường / Xã
+        <select id="fWard" disabled>
+          <option value="">-- Chọn phường / xã --</option>
+        </select>
+      </label>
+
+      <label>Mô tả
+        <textarea id="fDesc" rows="4"
+        placeholder="Tình trạng, bảo hành, địa chỉ..."></textarea>
+      </label>
+
+      <p class="form-err" id="fErr"></p>
+
+      <button class="btn-contact" id="fSubmit">
+        Đăng tin
+      </button>
+
+    </div>
+  `);
+
+  $('fName').focus();
+  loadProvinces();
+
+  $('fProvince').addEventListener('change',e=>
+    loadWards(e.target.value)
+  );
+}
+
+async function submitForm(){
+  const name=$('fName').value.trim();
+  const priceRaw=$('fPrice').value;
+  const price=Number(priceRaw);
+  let description=$('fDesc').value.trim();
+  const categoryId=Number($('fCategory').value);
+
+  if(!name)return $('fErr').textContent='Vui lòng nhập tên sản phẩm.';
+  if(priceRaw===''||!Number.isFinite(price)||price<0)
+    return $('fErr').textContent='Giá không hợp lệ.';
+  if(!categoryId)
+    return $('fErr').textContent='Vui lòng chọn danh mục.';
+
+  const prov=$('fProvince');
+  const provName=prov.value?prov.options[prov.selectedIndex].text:'';
+  const wardName=$('fWard').value;
+  const addr=[wardName,provName].filter(Boolean).join(', ');
+
+  if(addr)
+    description+=(description?'\n':'')+'Khu vực: '+addr;
+
+  $('fErr').textContent='';
+  $('fSubmit').disabled=true;
+
+  try{
+    const res=await fetch(API_URL,{
+      method:'POST',
+      headers:headers(true),
+      body:JSON.stringify({
+        name,
+        price,
+        description,
+        categoryId
+      })
+    });
+
+    if(!res.ok){
+      const e=await res.json().catch(()=>({}));
+      throw new Error(e.message||'HTTP '+res.status);
+    }
+
+    closeModal();
+    await load();
+
+  }catch(err){
+    $('fErr').textContent='Không đăng được: '+err.message;
+    $('fSubmit').disabled=false;
+  }
+}
+
+/* ===== XÓA TIN ===== */
+
+async function deleteCurrent(){
+  if(!cur||!confirm('Xóa tin "'+cur.title+'"?'))return;
+
+  const res=await fetch(
+    `${API_URL}/${cur.id}`,
+    {
+      method:'DELETE',
+      headers:headers()
+    }
+  );
+
+  if(!res.ok){
+    alert('Không xóa được (HTTP '+res.status+').');
+    return;
+  }
+
+  closeModal();
+  await load();
+}
+
+/* ===== SỰ KIỆN ===== */
+
+$('categories').addEventListener('click',e=>{
+  const c=e.target.closest('.icvv3li');
+  if(!c)return;
+
+  cat=cat===Number(c.dataset.cat)?-1:Number(c.dataset.cat);
+
+  renderCats();
+  reset();
+});
+
+document.querySelector('.toolbar').addEventListener('click',e=>{
+  const b=e.target.closest('.chip');
+  if(!b)return;
+
+  document.querySelectorAll('.chip')
+    .forEach(x=>x.classList.toggle('active',x===b));
+
+  range=b.dataset.range;
+  reset();
+});
+
+$('sort').addEventListener('change',reset);
+$('btnSearch').addEventListener('click',reset);
+
+$('q').addEventListener('keydown',e=>{
+  if(e.key==='Enter')reset();
+});
+
+$('more').addEventListener('click',()=>{
+  shown+=PAGE;
+  render();
+});
+
+$('productGrid').addEventListener('click', e => {
+
+  // NÚT THÊM GIỎ
+  const addBtn = e.target.closest('.btn-add-cart');
+
+  if (addBtn) {
+    e.stopPropagation();
+
+    const id = Number(addBtn.dataset.id);
+    const product = all.find(p => Number(p.id) === id);
+
+    if (!product) {
+      alert('Không tìm thấy sản phẩm!');
+      return;
+    }
+
+    let cart = [];
+
+    try {
+      cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    } catch {
+      cart = [];
+    }
+
+    const index = cart.findIndex(
+      item => Number(item.id) === Number(product.id)
+    );
+
+    if (index !== -1) {
+
+      cart[index].quantity =
+        Number(cart[index].quantity || 1) + 1;
+
+    } else {
+
+      cart.push({
+        id: product.id,
+        name: product.name,
+        title: product.title,
+        price: Number(product.price || 0),
+        imageUrl: product.image,
+        quantity: 1
+      });
+
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    alert('Đã thêm sản phẩm vào giỏ hàng!');
+
+    return;
+  }
+
+
+  // NÚT MUA NGAY
+  const buyBtn = e.target.closest('.btn-buy-now');
+
+  if (buyBtn) {
+    e.stopPropagation();
+
+    const id = Number(buyBtn.dataset.id);
+    const product = all.find(p => Number(p.id) === id);
+
+    if (!product) {
+      alert('Không tìm thấy sản phẩm!');
+      return;
+    }
+
+    let cart = [];
+
+    try {
+      cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    } catch {
+      cart = [];
+    }
+
+    const index = cart.findIndex(
+      item => Number(item.id) === Number(product.id)
+    );
+
+    if (index !== -1) {
+
+      cart[index].quantity =
+        Number(cart[index].quantity || 1) + 1;
+
+    } else {
+
+      cart.push({
+        id: product.id,
+        name: product.name,
+        title: product.title,
+        price: Number(product.price || 0),
+        imageUrl: product.image,
+        quantity: 1
+      });
+
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    window.location.href = '/cart.html';
+
+    return;
+  }
+
+
+  // CLICK VÀO CARD → XEM CHI TIẾT
+  const c = e.target.closest('.product-card');
+
+  if (c) {
+    openDetail(c.dataset.id);
+  }
+
+});
+
+/* ===== LOAD SẢN PHẨM ===== */
+
+async function load(){
+  $('productGrid').innerHTML='<div class="skel"></div>'.repeat(8);
+
+  try{
+    const res=await fetch(API_URL,{headers:headers()});
+
+    if(!res.ok)
+      throw new Error('HTTP '+res.status);
+
+    const data=await res.json();
+
+    all=(Array.isArray(data)?data:[]).map(norm);
+
+    render();
+
+  }catch(err){
+    $('productGrid').innerHTML=
+      `<div class="state">
+        Không tải được dữ liệu (${esc(err.message)}).
+      </div>`;
+  }
+}
+
+/* ===== CART COUNT ===== */
+
+function updateCartCount() {
+  let cart = [];
+
+  try {
+    cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  } catch {
+    cart = [];
+  }
+
+  const count = cart.reduce(
+    (total, item) => total + Number(item.quantity || 1),
+    0
+  );
+
+  const cartCount = $('cartCount');
+
+  if (cartCount) {
+    cartCount.textContent = count;
+    cartCount.style.display = count > 0 ? 'flex' : 'none';
+  }
+}
+
+
+/* ===== START ===== */
+
+renderCats();
+updateHeader();
+updateCartCount();
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang cá nhân - RaoVat</title>
+  <link rel="stylesheet" href="/products.css">
+
+  <style>
+    .pf { max-width: 960px; margin: 32px auto 64px; padding: 0 16px;
+          display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
+
+    /* Cột trái: danh thiếp tối màu, điểm nhấn duy nhất của trang */
+    .pf-side { background: #222; color: #fff; border-radius: 14px; padding: 28px 24px; }
+    .pf-avatar { width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
+                 background: #ffba00; display: block; margin-bottom: 16px; }
+    .pf-name { font-size: 22px; line-height: 1.25; margin: 0 0 4px; word-break: break-word; }
+    .pf-email { margin: 0 0 16px; color: #bbb; font-size: 14px; word-break: break-all; }
+    .pf-role { display: inline-block; background: #ffba00; color: #222; font-weight: 700;
+               font-size: 13px; padding: 4px 10px; border-radius: 6px; }
+
+    .pf-meter { margin-top: 28px; padding-top: 20px; border-top: 1px solid #3a3a3a; }
+    .pf-meter p { margin: 0 0 8px; font-size: 14px; color: #ddd; }
+    .pf-bar { height: 6px; background: #3a3a3a; border-radius: 3px; overflow: hidden; }
+    .pf-bar i { display: block; height: 100%; background: #ffba00; width: 0; transition: width .4s; }
+
+    .pf-side .pf-out { margin-top: 28px; width: 100%; background: transparent; color: #fff;
+                       border: 1px solid #555; border-radius: 8px; padding: 10px; cursor: pointer;
+                       font: inherit; font-weight: 600; }
+    .pf-side .pf-out:hover { border-color: #ffba00; color: #ffba00; }
+
+    /* Cột phải */
+    .pf-main { background: #fff; border-radius: 14px; padding: 8px 28px 24px;
+               box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .pf-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 0 6px; }
+    .pf-top h2 { margin: 0; font-size: 18px; }
+
+    .pf-row { display: grid; grid-template-columns: 140px 1fr; gap: 12px; padding: 16px 0;
+              border-bottom: 1px solid #eee; align-items: center; }
+    .pf-row:last-of-type { border-bottom: 0; }
+    .pf-row dt { color: #777; font-size: 14px; }
+    .pf-row dd { margin: 0; font-weight: 600; word-break: break-word; }
+    .pf-row dd.empty { color: #999; font-weight: 400; }
+    .pf-row input { width: 100%; box-sizing: border-box; padding: 10px 12px; font: inherit;
+                    border: 1px solid #ccc; border-radius: 8px; }
+    .pf-row input:focus { outline: 2px solid #ffba00; border-color: #ffba00; }
+
+    .pf-btn { border: 0; border-radius: 8px; padding: 10px 16px; cursor: pointer;
+              font: inherit; font-weight: 700; background: #ffba00; color: #222; }
+    .pf-btn.ghost { background: #eee; }
+    .pf-btn:focus-visible, .pf-out:focus-visible { outline: 2px solid #ff7a1a; outline-offset: 2px; }
+    .pf-actions { display: none; gap: 10px; padding-top: 16px; }
+    .editing .pf-actions { display: flex; }
+    .editing #btnEdit { display: none; }
+
+    .pf-msg { min-height: 20px; margin: 10px 0 0; font-size: 14px; color: #1a7f37; }
+
+    @media (max-width: 720px) {
+      .pf { grid-template-columns: 1fr; margin-top: 16px; }
+      .pf-main { padding: 8px 18px 20px; }
+      .pf-row { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="/products.html" class="logo">RAO<b>VAT</b></a>
+      <div class="header-actions">
+        <a href="/products.html" class="btn-login">Trang chủ</a>
+        <button type="button" class="btn-post" id="btnLogout">Đăng xuất</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="pf" id="pf">
+    <aside class="pf-side">
+      <img id="avatar" class="pf-avatar" alt="Ảnh đại diện" src="">
+      <h1 class="pf-name" id="name">Đang tải...</h1>
+      <p class="pf-email" id="email"></p>
+      <span class="pf-role" id="role">user</span>
+
+      <div class="pf-meter">
+        <p id="meterText">Hồ sơ hoàn thiện 0%</p>
+        <div class="pf-bar"><i id="meterBar"></i></div>
+      </div>
+
+      <button type="button" class="pf-out" id="btnLogout2">Đăng xuất</button>
+    </aside>
+
+    <section class="pf-main">
+      <div class="pf-top">
+        <h2>Thông tin tài khoản</h2>
+        <button type="button" class="pf-btn" id="btnEdit">Chỉnh sửa</button>
+      </div>
+
+      <dl>
+        <div class="pf-row">
+          <dt>Tên đăng nhập</dt>
+          <dd id="vUsername">-</dd>
+        </div>
+        <div class="pf-row">
+          <dt>Họ và tên</dt>
+          <dd><span class="view" id="vFullName">-</span>
+              <input class="edit" id="iFullName" type="text" autocomplete="name" hidden></dd>
+        </div>
+        <div class="pf-row">
+          <dt>Email</dt>
+          <dd id="vEmail">-</dd>
+        </div>
+        <div class="pf-row">
+          <dt>Số điện thoại</dt>
+          <dd><span class="view" id="vPhone">-</span>
+              <input class="edit" id="iPhone" type="tel" autocomplete="tel" placeholder="Ví dụ: 0912 345 678" hidden></dd>
+        </div>
+        <div class="pf-row">
+          <dt>Địa chỉ</dt>
+          <dd><span class="view" id="vAddress">-</span>
+              <input class="edit" id="iAddress" type="text" autocomplete="street-address" placeholder="Số nhà, đường, phường, tỉnh/thành" hidden></dd>
+        </div>
+      </dl>
+
+      <div class="pf-actions">
+        <button type="button" class="pf-btn" id="btnSave">Lưu thay đổi</button>
+        <button type="button" class="pf-btn ghost" id="btnCancel">Hủy</button>
+      </div>
+      <p class="pf-msg" id="msg" role="status"></p>
+
+      <button type="button" class="pf-btn ghost" style="margin-top:16px"
+              onclick="location.href='/products.html'">← Quay lại mua bán</button>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    // --- Kiểm tra đăng nhập ---
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      location.replace('/login.html');
+      throw new Error('Chưa đăng nhập');
+    }
+
+    let user = {};
+    try { user = JSON.parse(localStorage.getItem('user') || '{}') || {}; } catch { user = {}; }
+
+    const fullNameOf = (u) => u.full_name || u.fullName || '';
+    const displayName = () => fullNameOf(user) || user.username || 'Tài khoản';
+
+    function setText(el, value, emptyText) {
+      el.textContent = value || emptyText;
+      el.classList.toggle('empty', !value);
+    }
+
+    // --- Hiển thị ---
+    function render() {
+      const name = displayName();
+      $('avatar').src = user.avatar || user.avatarUrl ||
+        'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) +
+        '&background=ffba00&color=222&size=192';
+      $('name').textContent = name;
+      $('email').textContent = user.email || '';
+      $('role').textContent = user.role || 'user';
+
+      $('vUsername').textContent = user.username || '-';
+      $('vEmail').textContent = user.email || '-';
+      setText($('vFullName'), fullNameOf(user), 'Chưa cập nhật');
+      setText($('vPhone'), user.phone, 'Chưa cập nhật');
+      setText($('vAddress'), user.address, 'Chưa cập nhật');
+
+      // Mức độ hoàn thiện hồ sơ
+      const fields = [user.username, user.email, fullNameOf(user), user.phone, user.address];
+      const done = fields.filter(Boolean).length;
+      const pct = Math.round(done / fields.length * 100);
+      $('meterBar').style.width = pct + '%';
+      $('meterText').textContent = pct === 100
+        ? 'Hồ sơ đã đầy đủ'
+        : 'Hồ sơ hoàn thiện ' + pct + '% — thêm số điện thoại và địa chỉ để người mua liên hệ bạn dễ hơn';
+    }
+
+    // --- Chỉnh sửa ---
+    function setEditing(on) {
+      $('pf').classList.toggle('editing', on);
+      document.querySelectorAll('.view').forEach(e => e.hidden = on);
+      document.querySelectorAll('.edit').forEach(e => e.hidden = !on);
+      if (on) {
+        $('iFullName').value = fullNameOf(user);
+        $('iPhone').value = user.phone || '';
+        $('iAddress').value = user.address || '';
+        $('iFullName').focus();
+      }
+    }
+
+    $('btnEdit').addEventListener('click', () => { $('msg').textContent = ''; setEditing(true); });
+    $('btnCancel').addEventListener('click', () => setEditing(false));
+
+    $('btnSave').addEventListener('click', () => {
+      const phone = $('iPhone').value.trim();
+      if (phone && !/^[0-9+\s.-]{9,15}$/.test(phone)) {
+        $('msg').style.color = '#c62828';
+        $('msg').textContent = 'Số điện thoại không hợp lệ. Hãy nhập 9–15 chữ số.';
+        return;
+      }
+      user = {
+        ...user,
+        full_name: $('iFullName').value.trim(),
+        phone,
+        address: $('iAddress').value.trim()
+      };
+      localStorage.setItem('user', JSON.stringify(user));
+
+      // TODO: gọi API của bạn để lưu lên server, ví dụ:
+      // fetch('/api/users/me', {
+      //   method: 'PUT',
+      //   headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      //   body: JSON.stringify({ full_name: user.full_name, phone: user.phone, address: user.address })
+      // });
+
+      setEditing(false);
+      render();
+      $('msg').style.color = '#1a7f37';
+      $('msg').textContent = 'Đã lưu thay đổi.';
+    });
+
+    // --- Đăng xuất ---
+    function logout() {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
+      location.href = '/products.html';
+    }
+    $('btnLogout').addEventListener('click', logout);
+    $('btnLogout2').addEventListener('click', logout);
+
+    render();
+  </script>
+</body>
+</html>
